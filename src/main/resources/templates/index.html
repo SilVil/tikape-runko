@@ -20,16 +20,16 @@
                 <th>Viimeisin viesti</th>
             </tr>
 
-            <tr th:each="keskustelualue: ${keskustelualueet}">
+            <tr th:each="keskustelualueenYhteenveto: ${keskustelualueidenYhteenvedot}">
 
                 <td>
-                    <form method="POST" th:action="@{~/keskustelualueet/{id}(id=${keskustelualue.id})}">
-                        <input type="hidden" name="keskustelualue" th:value="${keskustelualue.id}"/>
-                        <input type="submit" th:value="${keskustelualue.nimi}"/>
-                    </form>
-
+                    <a th:href="@{~/{id}(id=${keskustelualueenYhteenveto.id})}" th:text="${keskustelualueenYhteenveto.nimi}">name</a>
                 </td>
+                <td th:text="${keskustelualueenYhteenveto.viestienLukumaara}">0</td>
+                <td th:text="${keskustelualueenYhteenveto.aika}">0</td>
+
             </tr>
+
 
         </table>
 

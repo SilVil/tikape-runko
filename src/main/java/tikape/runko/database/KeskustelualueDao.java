@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import tikape.runko.domain.Keskustelualue;
+import tikape.runko.domain.Yhteenveto;
 
 public class KeskustelualueDao implements Dao<Keskustelualue, String> {
 
@@ -87,6 +88,35 @@ public class KeskustelualueDao implements Dao<Keskustelualue, String> {
         connection.close();
 
         return keskustelualueet;
+
+    }
+
+    public Yhteenveto findOnesMessageCountsAndLatest(String key, String nimi) throws SQLException {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT COUNT(Viesti.id) as viesteja,\n"
+                + "	 IFNULL(MAX(Viesti.aika),'n/a') as viimeisinViesti\n"
+                + "FROM Viesti, Viestiketju, Keskustelualue\n"
+                + "WHERE Keskustelualue.id = ? \n"
+                + "AND Viesti.viestiketju = Viestiketju.id\n"
+                + "AND Viestiketju.keskustelualue = Keskustelualue.id;");
+
+        stmt.setObject(1, key);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean hasOne = rs.next();
+        if (!hasOne) {
+            return null;
+        }
+
+        Integer viestienLukumaara = rs.getInt("viesteja");
+        String viimeisinViesti = rs.getString("viimeisinViesti");
+        Yhteenveto keskustelualueenYhteenveto = new Yhteenveto(key, nimi, viestienLukumaara, viimeisinViesti);
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return keskustelualueenYhteenveto;
 
     }
 

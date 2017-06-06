@@ -41,8 +41,10 @@ public class Database {
         String ukrainaId = UUID.randomUUID().toString().substring(0, 4);
 
         String jenkemId = UUID.randomUUID().toString().substring(0, 4);
+        String lyricatId = UUID.randomUUID().toString().substring(0, 4);
 
-        String viestiId = UUID.randomUUID().toString().substring(0, 4);
+        String viestiId1 = UUID.randomUUID().toString().substring(0, 4);
+        String viestiId2 = UUID.randomUUID().toString().substring(0, 4);
 
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
         lista.add("CREATE TABLE Keskustelualue"
@@ -69,8 +71,10 @@ public class Database {
         lista.add("INSERT INTO Keskustelualue (id,nimi) VALUES ('" + UUID.randomUUID().toString().substring(0, 4) + "', 'Se syvenee syksyllä');");
 
         lista.add("INSERT INTO Viestiketju (id, otsikko,keskustelualue) VALUES ('" + jenkemId + "', 'Jenkem', '" + ukrainaId + "');");
-
-        lista.add("INSERT INTO Viesti (id, nimimerkki, teksti, viestiketju, aika) VALUES ('" + viestiId + "', 'pyhimys', 'nisti ku nisti eskapisti jotain paos', '" + jenkemId + "', datetime('now', 'localtime'));");
+        lista.add("INSERT INTO Viestiketju (id, otsikko,keskustelualue) VALUES ('" + lyricatId + "', 'Lyricat', '" + ukrainaId + "');");
+        
+        lista.add("INSERT INTO Viesti (id, nimimerkki, teksti, viestiketju, aika) VALUES ('" + viestiId1 + "', 'pyhimys', 'nisti ku nisti eskapisti jotain paos', '" + jenkemId + "', datetime('now', 'localtime'));");
+        lista.add("INSERT INTO Viesti (id, nimimerkki, teksti, viestiketju, aika) VALUES ('" + viestiId2 + "', 'pyhimys', 'lyricat nappaa, lyriikat nappaa', '" + lyricatId + "', datetime('now', 'localtime'));");
         return lista;
     }
 }

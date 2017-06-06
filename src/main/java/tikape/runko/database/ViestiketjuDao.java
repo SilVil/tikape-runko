@@ -9,6 +9,7 @@ import java.util.List;
 import tikape.runko.domain.Keskustelualue;
 import tikape.runko.domain.Viesti;
 import tikape.runko.domain.Viestiketju;
+import tikape.runko.domain.Yhteenveto;
 
 public class ViestiketjuDao implements Dao<Viestiketju, String> {
 
@@ -92,6 +93,54 @@ public class ViestiketjuDao implements Dao<Viestiketju, String> {
         return viestiketjut;
 
     }
+
+    public Yhteenveto findOnesMessageCountsAndLatest(String key, String nimi) throws SQLException {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT COUNT(Viesti.id) as viesteja,\n"
+                + "	 IFNULL(MAX(Viesti.aika),'n/a') as viimeisinViesti\n"
+                + "FROM Viesti, Viestiketju\n"
+                + "WHERE Viestiketju.id = ? \n"
+                + "AND Viesti.viestiketju = Viestiketju.id;");
+
+        stmt.setObject(1, key);
+
+        ResultSet rs = stmt.executeQuery();
+
+        Integer viestienLukumaara = rs.getInt("viesteja");
+        String viimeisinViesti = rs.getString("viimeisinViesti");
+        Yhteenveto viestiketjunYhteenveto = new Yhteenveto(key, nimi, viestienLukumaara, viimeisinViesti);
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return viestiketjunYhteenveto;
+
+    }
+
+    public List<Viestiketju> findThreadsOfArea(String key) throws SQLException {
+        Connection connection = database.getConnection();
+        PreparedStatement stmt = connection.prepareStatement("SELECT Viestiketju.id, Viestiketju.otsikko\n"
+                + "FROM Viestiketju, Keskustelualue\n"
+                + "WHERE Keskustelualue.id = ?\n"
+                + "AND Viestiketju.keskustelualue = Keskustelualue.id;");
+
+        stmt.setObject(1, key);
+
+        ResultSet rs = stmt.executeQuery();
+
+        List<Viestiketju> viestiketjut = new ArrayList<>();
+        while (rs.next()) {
+            String id = rs.getString("id");
+            String otsikko = rs.getString("otsikko");
+            viestiketjut.add(new Viestiketju(id, otsikko));
+        }
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return viestiketjut;
+
+    }
 }
-
-

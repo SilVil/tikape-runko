@@ -14,6 +14,12 @@ public class Viestiketju {
         this.viestit = viestit;
     }
 
+    public Viestiketju(String id, String otsikko) {
+        this.id = id;
+        this.otsikko = otsikko;
+        this.viestit = new ArrayList<>();
+    }
+
     public String getId() {
         return id;
     }
@@ -33,7 +39,7 @@ public class Viestiketju {
     public ArrayList<Viesti> getViestit() {
         return viestit;
     }
-    
+
     public void lisaaViesti(Viesti viesti) {
         this.viestit.add(viesti);
     }

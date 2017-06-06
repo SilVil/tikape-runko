@@ -7,24 +7,23 @@
     </head>
 
     <body>
-        <h1>Tervetuloa keskustelemaan!</h1>
+        <h1>Keskustelualueen nimi tähän!</h1>
         <table style="text-align:left;">
 
             <tr>
-                <th>Alue</th>
+                <th>Viestiketju</th>
                 <th>Viestejä yhteensä</th>
                 <th>Viimeisin viesti</th>
             </tr>
 
-            <tr th:each="keskustelualue: ${keskustelualueet}">
+            <tr th:each="viestiketjunYhteenveto: ${viestiketjujenYhteenvedot}">
 
                 <td>
-                    <form method="POST" th:action="@{~/keskustelualueet/{id}(id=${keskustelualue.id})}">
-                        <input type="hidden" name="keskustelualue" th:value="${keskustelualue.id}"/>
-                        <input type="submit" th:value="${keskustelualue.nimi}"/>
-                    </form>
-
+                    <a th:href="@{~/{id}(id=${viestiketjunYhteenveto.id})}" th:text="${viestiketjunYhteenveto.nimi}">name</a>
                 </td>
+                <td th:text="${viestiketjunYhteenveto.viestienLukumaara}">0</td>
+                <td th:text="${viestiketjunYhteenveto.aika}">0</td>
+
             </tr>
 
         </table>
