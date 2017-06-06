@@ -2,15 +2,56 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>Otsikko</title>
+        <title>Keskustelualue</title>
         <meta charset="utf-8" />
     </head>
 
-    <body>
-        <h1>Heippa vaan!</h1>
+    <body style="background-color:powderblue;">
 
-        <p>Ja .. <span th:text="${viesti}">jotain?</span></p>
+        <h2 th:text="${error}"></h2>
 
-        <p><a href="/opiskelijat">Tästä opiskelijalistaukseen.</a></p>
+        <h2>Keskustelupalsta</h2>
+
+        <table style="text-align:left;">
+
+            <tr>
+                <th>Alue</th>
+                <th>Viestejä yhteensä</th>
+                <th>Viimeisin viesti</th>
+            </tr>
+
+            <tr th:each="keskustelualue: ${keskustelualueet}">
+
+                <td>
+                    <form method="POST" th:action="@{~/keskustelualueet/{id}(id=${keskustelualue.id})}">
+                        <input type="hidden" name="keskustelualue" th:value="${keskustelualue.id}"/>
+                        <input type="submit" th:value="${keskustelualue.nimi}"/>
+                    </form>
+
+                </td>
+            </tr>
+
+        </table>
+
+        <h3>Lisää uusi keskustelualue</h3>
+
+        <form id="addkeskustelualue" method="POST" th:action="@{~/keskustelualueet}">
+            <table>
+
+                <tr>
+                    <th>Nimi</th>
+                    <th></th>
+                </tr>
+
+                <tr>
+                    <td><input type="text" name="nimi"/></td>
+                    <td>
+                        <input type="submit" value="Lisää!"/>
+                    </td>
+                </tr>
+            </table>
+
+        </form>
+
     </body>
 </html>

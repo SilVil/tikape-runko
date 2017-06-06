@@ -3,6 +3,7 @@ package tikape.runko.database;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class Database {
 
@@ -37,13 +38,39 @@ public class Database {
 
     private List<String> sqliteLauseet() {
         ArrayList<String> lista = new ArrayList<>();
+        String ukrainaId = UUID.randomUUID().toString().substring(0, 4);
+
+        String jenkemId = UUID.randomUUID().toString().substring(0, 4);
+
+        String viestiId = UUID.randomUUID().toString().substring(0, 4);
 
         // tietokantataulujen luomiseen tarvittavat komennot suoritusjärjestyksessä
-        lista.add("CREATE TABLE Opiskelija (id integer PRIMARY KEY, nimi varchar(255));");
-        lista.add("INSERT INTO Opiskelija (nimi) VALUES ('Platon');");
-        lista.add("INSERT INTO Opiskelija (nimi) VALUES ('Aristoteles');");
-        lista.add("INSERT INTO Opiskelija (nimi) VALUES ('Homeros');");
+        lista.add("CREATE TABLE Keskustelualue"
+                + "(id varchar(5) PRIMARY KEY, "
+                + "nimi varchar(50)"
+                + ");");
+        lista.add("CREATE TABLE Viestiketju "
+                + "(id varchar(5) PRIMARY KEY, "
+                + "otsikko varchar(100),"
+                + "keskustelualue varchar(5),"
+                + "FOREIGN KEY(keskustelualue) REFERENCES Keskustelualue(id)"
+                + ");");
+        lista.add("CREATE TABLE Viesti "
+                + "(id varchar(5) PRIMARY KEY, "
+                + "nimimerkki varchar(100),"
+                + "teksti varchar(5000),"
+                + "aika text,"
+                + "viestiketju varchar(5),"
+                + "FOREIGN KEY(viestiketju) REFERENCES Viestiketju(id)"
+                + ");");
 
+        lista.add("INSERT INTO Keskustelualue (id,nimi) VALUES ('" + ukrainaId + "', 'Ukraina');");
+        lista.add("INSERT INTO Keskustelualue (id,nimi) VALUES ('" + UUID.randomUUID().toString().substring(0, 4) + "', 'Erectus');");
+        lista.add("INSERT INTO Keskustelualue (id,nimi) VALUES ('" + UUID.randomUUID().toString().substring(0, 4) + "', 'Se syvenee syksyllä');");
+
+        lista.add("INSERT INTO Viestiketju (id, otsikko,keskustelualue) VALUES ('" + jenkemId + "', 'Jenkem', '" + ukrainaId + "');");
+
+        lista.add("INSERT INTO Viesti (id, nimimerkki, teksti, viestiketju, aika) VALUES ('" + viestiId + "', 'pyhimys', 'nisti ku nisti eskapisti jotain paos', '" + jenkemId + "', datetime('now', 'localtime'));");
         return lista;
     }
 }
