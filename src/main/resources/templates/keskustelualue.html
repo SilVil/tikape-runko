@@ -19,7 +19,7 @@
             <tr th:each="viestiketjunYhteenveto: ${viestiketjujenYhteenvedot}">
 
                 <td>
-                    <a th:href="@{~/{id}(id=${viestiketjunYhteenveto.id})}" th:text="${viestiketjunYhteenveto.nimi}">name</a>
+                    <a th:href="@{~/{areaId}/{id}(areaId=${viestiketjunYhteenveto.parentId}, id=${viestiketjunYhteenveto.id})}" th:text="${viestiketjunYhteenveto.nimi}">name</a>
                 </td>
                 <td th:text="${viestiketjunYhteenveto.viestienLukumaara}">0</td>
                 <td th:text="${viestiketjunYhteenveto.aika}">0</td>

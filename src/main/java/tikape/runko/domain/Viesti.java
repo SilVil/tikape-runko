@@ -6,11 +6,11 @@ public class Viesti {
 
     private String id;
     private String nimi;
-    private Timestamp aika;
+    private String aika;
     private String teksti;
-    private Integer viestiketju;
+    private String viestiketju;
 
-    public Viesti(String id, String nimi, Timestamp aika, String teksti, Integer viestiketju) {
+    public Viesti(String id, String nimi, String aika, String teksti, String viestiketju) {
         this.id = id;
         this.nimi = nimi;
         this.aika = aika;
@@ -35,11 +35,11 @@ public class Viesti {
         this.nimi = nimi;
     }
 
-    public Timestamp getAika() {
+    public String getAika() {
         return aika;
     }
 
-    public void setAika(Timestamp aika) {
+    public void setAika(String aika) {
         this.aika = aika;
     }
 
@@ -51,11 +51,11 @@ public class Viesti {
         this.teksti = teksti;
     }
 
-    public Integer getViestiketju() {
+    public String getViestiketju() {
         return viestiketju;
     }
 
-    public void setViestiKetjuId(Integer viestiketju) {
+    public void setViestiKetjuId(String viestiketju) {
         this.viestiketju = viestiketju;
     }
 

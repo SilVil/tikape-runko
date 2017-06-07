@@ -11,8 +11,10 @@ import static spark.Spark.*;
 import spark.template.thymeleaf.ThymeleafTemplateEngine;
 import tikape.runko.database.Database;
 import tikape.runko.database.KeskustelualueDao;
+import tikape.runko.database.ViestiDao;
 import tikape.runko.database.ViestiketjuDao;
 import tikape.runko.domain.Keskustelualue;
+import tikape.runko.domain.Viesti;
 import tikape.runko.domain.Viestiketju;
 import tikape.runko.domain.Yhteenveto;
 
@@ -24,6 +26,7 @@ public class Main {
 
         ViestiketjuDao viestiketjuDao = new ViestiketjuDao(database);
         KeskustelualueDao keskustelualueDao = new KeskustelualueDao(database);
+        ViestiDao viestiDao = new ViestiDao(database);
 
         //Tämä post antaa käyttäjälle mahdollisuuden perustaa uuden keskustelualueen
         post("/", (req, res) -> {
@@ -52,17 +55,32 @@ public class Main {
 
         //Tämä getti näyttää yhteen keskustelualueeseen liittyvää tietoa keskustelualueella
         get("/:id", (req, res) -> {
+            
             List<Yhteenveto> viestiketjujenYhteenvedot = new ArrayList<>();
             for (Viestiketju viestiketju : viestiketjuDao.findThreadsOfArea(req.params(":id"))) {
                 viestiketjujenYhteenvedot.add(viestiketjuDao.
                         findOnesMessageCountsAndLatest(
                                 viestiketju.getId(), viestiketju.getOtsikko()));
             }
+            
+            //lisää yhteenvetoihin tieto siitä, mikä on keskustelualueen ID
+            for (Yhteenveto yhteenveto : viestiketjujenYhteenvedot){
+                yhteenveto.setParentId(req.params(":id"));
+            }
+            
             HashMap<String, Object> data = new HashMap<>();
             data.put("viestiketjujenYhteenvedot", viestiketjujenYhteenvedot);
             return new ModelAndView(data, "keskustelualue");
         }, new ThymeleafTemplateEngine());
-
+        
+        //Tämä getti näyttää viestiketjun
+        get("/:areaId/:id", (req, res) -> {
+            System.out.println("Viestiketjun id on" + req.params(":id"));
+            List<Viesti> viestit =  viestiDao.findMessagesOfThread(req.params(":id"));
+            HashMap<String, Object> data = new HashMap<>();
+            data.put("viestit", viestit);
+            return new ModelAndView(data, "viestiketju");
+        }, new ThymeleafTemplateEngine());
     }
 
 }

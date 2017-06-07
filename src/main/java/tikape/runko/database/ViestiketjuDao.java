@@ -143,4 +143,32 @@ public class ViestiketjuDao implements Dao<Viestiketju, String> {
         return viestiketjut;
 
     }
+
+    //tätä ei ehkä tarvita, emt
+    public String findAreaKey(String key) throws SQLException {
+        Connection connection = database.getConnection();
+
+        PreparedStatement stmt = connection.prepareStatement(" \n"
+                + "SELECT Viestiketju.keskustelualue\n"
+                + "FROM Viestiketju\n"
+                + "WHERE Viestiketju.id = ?\n"
+                + "LIMIT 1;");
+        stmt.setObject(1, key);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean hasOne = rs.next();
+        if (!hasOne) {
+            return null;
+        }
+
+        String keskustelualue = rs.getString("keskustelualue");
+
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return keskustelualue;
+
+    }
 }

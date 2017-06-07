@@ -14,13 +14,33 @@ public class Yhteenveto {
     private String nimi;
     private Integer viestienLukumaara;
     private String aika;
+    private String parentId;
 
     public Yhteenveto(String id, String nimi, Integer viestienLukumaara, String aika) {
         this.id = id;
         this.nimi = nimi;
         this.viestienLukumaara = viestienLukumaara;
         this.aika = aika;
+        this.parentId = "n/a";
     }
+
+    public Yhteenveto(String id, String nimi, Integer viestienLukumaara, String aika, String parentId) {
+        this.id = id;
+        this.nimi = nimi;
+        this.viestienLukumaara = viestienLukumaara;
+        this.aika = aika;
+        this.parentId = parentId;
+    }
+
+    public String getParentId() {
+        return parentId;
+    }
+
+    public void setParentId(String parentId) {
+        this.parentId = parentId;
+    }
+    
+    
 
     public String getId() {
         return id;

@@ -2,17 +2,24 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
     <head>
-        <title>Otsikko</title>
+        <title>Viestiketjun nimi</title>
         <meta charset="utf-8" />
     </head>
 
     <body>
-        <h1>Hei opiskelijat!</h1>
+        <h1>Viestiketjun otsikko tähän!</h1>
+        <table style="text-align:left;">
 
-        <ol>
-            <li th:each="opiskelija: ${opiskelijat}">
-                <span th:text="${opiskelija.nimi}">opiskelijan nimi</span> <a th:href="${'/opiskelijat/' + opiskelija.id}">linkki</a>
-            </li>
-        </ol>
+            <tr>
+                <th>Viestit</th>
+            </tr>
+
+            <tr th:each="viesti: ${viestit}">
+
+                <td th:text="${viesti.aika + ' ' + viesti.teksti + ' t.' + viesti.nimi}">0</td>
+
+            </tr>
+
+        </table>
     </body>
 </html>
