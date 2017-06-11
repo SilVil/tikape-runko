@@ -3,7 +3,6 @@ package tikape.runko;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.TreeMap;
 import java.util.UUID;
 import spark.ModelAndView;
@@ -29,14 +28,29 @@ public class Main {
         ViestiDao viestiDao = new ViestiDao(database);
 
         //Tämä post antaa käyttäjälle mahdollisuuden perustaa uuden keskustelualueen
-        post("/", (req, res) -> {
-            String nimi = req.queryParams("name").trim();
+        post("/keskustelualueet", (req, res) -> {
+            String nimi = req.queryParams("nimi").trim();
 
             if (!nimi.isEmpty()) {
                 keskustelualueDao.create(new Keskustelualue(UUID.randomUUID().toString().substring(0, 4), nimi));
             }
 
             res.redirect("/");
+            return "";
+        });
+
+        //Tämä post antaa käyttäjälle mahdollisuuden perustaa uuden viestiketjun
+        post("/:areaId/yhteenveto", (req, res) -> {
+            String parentId = req.params(":areaId");
+            System.out.println(parentId);
+            // entä jos tässä lisäisi keskustelualueella olevaan viestiketjulistaan uuden viestiketjun?
+            String otsikko = req.queryParams("otsikko").trim();
+
+            if (!otsikko.isEmpty()) {
+                viestiketjuDao.create(new Viestiketju(UUID.randomUUID().toString().substring(0, 4), otsikko, parentId, new ArrayList<>()));
+            }
+
+            res.redirect("/:id");
             return "";
         });
 
@@ -56,6 +70,10 @@ public class Main {
         //Tämä getti näyttää yhteen keskustelualueeseen liittyvää tietoa keskustelualueella
         get("/:id", (req, res) -> {
             
+            //Keskustelualue keskustelualue = keskustelualueDao.findOne(req.params(":id"));
+            
+            //String keskustelualueenNimi = keskustelualue.getNimi();
+      
             List<Yhteenveto> viestiketjujenYhteenvedot = new ArrayList<>();
             for (Viestiketju viestiketju : viestiketjuDao.findThreadsOfArea(req.params(":id"))) {
                 viestiketjujenYhteenvedot.add(viestiketjuDao.
@@ -63,20 +81,21 @@ public class Main {
                                 viestiketju.getId(), viestiketju.getOtsikko()));
             }
             
+          
             //lisää yhteenvetoihin tieto siitä, mikä on keskustelualueen ID
-            for (Yhteenveto yhteenveto : viestiketjujenYhteenvedot){
+            for (Yhteenveto yhteenveto : viestiketjujenYhteenvedot) {
                 yhteenveto.setParentId(req.params(":id"));
             }
-            
+
             HashMap<String, Object> data = new HashMap<>();
             data.put("viestiketjujenYhteenvedot", viestiketjujenYhteenvedot);
             return new ModelAndView(data, "keskustelualue");
         }, new ThymeleafTemplateEngine());
-        
+
         //Tämä getti näyttää viestiketjun
         get("/:areaId/:id", (req, res) -> {
             System.out.println("Viestiketjun id on" + req.params(":id"));
-            List<Viesti> viestit =  viestiDao.findMessagesOfThread(req.params(":id"));
+            List<Viesti> viestit = viestiDao.findMessagesOfThread(req.params(":id"));
             HashMap<String, Object> data = new HashMap<>();
             data.put("viestit", viestit);
             return new ModelAndView(data, "viestiketju");
