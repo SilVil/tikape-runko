@@ -7,18 +7,33 @@ public class Viestiketju {
     private String id;
     private String otsikko;
     private ArrayList<Viesti> viestit;
+    private String keskustelualue;
 
-    public Viestiketju(String id, String otsikko, ArrayList<Viesti> viestit) {
+    
+
+    public Viestiketju(String id, String otsikko, String keskustelualue, ArrayList<Viesti> viestit) {
         this.id = id;
         this.otsikko = otsikko;
         this.viestit = viestit;
+        this.keskustelualue = keskustelualue;
     }
 
-    public Viestiketju(String id, String otsikko) {
+    public Viestiketju(String id, String otsikko, String keskustelualue) {
         this.id = id;
         this.otsikko = otsikko;
         this.viestit = new ArrayList<>();
+        this.keskustelualue = keskustelualue;
     }
+
+    public String getKeskustelualue() {
+        return keskustelualue;
+    }
+
+    public void setKeskustelualue(String keskustelualue) {
+        this.keskustelualue = keskustelualue;
+    }
+    
+    
 
     public String getId() {
         return id;

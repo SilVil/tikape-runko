@@ -120,4 +120,29 @@ public class KeskustelualueDao implements Dao<Keskustelualue, String> {
 
     }
 
+    public String findTitle(String key) throws SQLException {
+        Connection connection = database.getConnection();
+
+        PreparedStatement stmt = connection.prepareStatement("SELECT Keskustelualue.nimi\n"
+                + "FROM Keskustelualue\n"
+                + "WHERE Keskustelualue.id = ?\n"
+                + "LIMIT 1;");
+        stmt.setObject(1, key);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean hasOne = rs.next();
+        if (!hasOne) {
+            return null;
+        }
+
+        String nimi = rs.getString("nimi");
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return nimi;
+
+    }
+
 }

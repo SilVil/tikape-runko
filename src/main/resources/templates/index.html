@@ -23,7 +23,7 @@
             <tr th:each="keskustelualueenYhteenveto: ${keskustelualueidenYhteenvedot}">
 
                 <td>
-                    <a th:href="@{~/{id}(id=${keskustelualueenYhteenveto.id})}" th:text="${keskustelualueenYhteenveto.nimi}">name</a>
+                    <a th:href="@{~/{areaId}(areaId=${keskustelualueenYhteenveto.id})}" th:text="${keskustelualueenYhteenveto.nimi}">name</a>
                 </td>
                 <td th:text="${keskustelualueenYhteenveto.viestienLukumaara}">0</td>
                 <td th:text="${keskustelualueenYhteenveto.aika}">0</td>
@@ -35,7 +35,7 @@
 
         <h3>Lisää uusi keskustelualue</h3>
 
-        <form id="addkeskustelualue" method="POST" th:action="@{~/keskustelualueet}">
+        <form id="addkeskustelualue" method="POST" th:action="@{~/}">
             <table>
 
                 <tr>

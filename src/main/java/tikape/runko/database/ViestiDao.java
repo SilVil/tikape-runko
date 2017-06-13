@@ -28,7 +28,36 @@ public class ViestiDao implements Dao<Viesti, String> {
 
     @Override
     public Viesti create(Viesti t) throws SQLException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        Connection connection = database.getConnection();
+
+        String id = t.getId();
+        String nimi = t.getNimi();
+        String teksti = t.getTeksti();
+        String viestiketju = t.getViestiketju();
+        
+
+        PreparedStatement statement
+                = connection.prepareStatement("INSERT INTO Viesti (id, nimimerkki, teksti, viestiketju, aika) \n"
+                        + "VALUES (?,\n"
+                        + " 	?,\n"
+                        + " 	?,\n"
+                        + " 	?,\n"
+                        + " 	datetime('now', 'localtime'));");
+
+        statement.setString(1, id);
+        statement.setString(2, nimi);
+        statement.setString(3, teksti);
+        statement.setString(4, viestiketju);
+
+        statement.execute();
+
+        Viesti v = new Viesti(id, nimi, teksti, viestiketju, "n/a");
+
+        statement.close();
+        connection.close();
+
+        return v;
+
     }
 
     @Override

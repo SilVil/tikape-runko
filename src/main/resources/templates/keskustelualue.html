@@ -7,7 +7,7 @@
     </head>
 
     <body>
-        <h1>Keskustelualueen nimi tähän!</h1>
+        <h1 th:text="${yhteenvedotKeskustelualue.parentName}">Keskustelualue</h1>
         <table style="text-align:left;">
 
             <tr>
@@ -16,10 +16,10 @@
                 <th>Viimeisin viesti</th>
             </tr>
 
-            <tr th:each="viestiketjunYhteenveto: ${viestiketjujenYhteenvedot}">
+            <tr th:each="viestiketjunYhteenveto: ${yhteenvedotKeskustelualue.yhteenvedot}">
 
                 <td>
-                    <a th:href="@{~/{areaId}/{id}(areaId=${viestiketjunYhteenveto.parentId}, id=${viestiketjunYhteenveto.id})}" th:text="${viestiketjunYhteenveto.nimi}">name</a>
+                    <a th:href="@{~/{areaId}/{id}(areaId=${yhteenvedotKeskustelualue.parentId}, id=${viestiketjunYhteenveto.id})}" th:text="${viestiketjunYhteenveto.nimi}">name</a>
                 </td>
                 <td th:text="${viestiketjunYhteenveto.viestienLukumaara}">0</td>
                 <td th:text="${viestiketjunYhteenveto.aika}">0</td>
@@ -30,7 +30,7 @@
 
         <h3>Aloita uusi viestiketju</h3>
 
-        <form id="addviestiketju" method="POST" th:action="@{~/viestiketjut}">
+        <form id="addviestiketju" method="POST" th:action="@{~/{areaId}(areaId=${yhteenvedotKeskustelualue.parentId})}">
             <table>
 
                 <tr>
@@ -47,6 +47,7 @@
             </table>
 
         </form>
+        <h3><a th:href="@{~/}" th:text="'Palaa aloitussivulle'">Paluulinkki rikki</a></h3> 
 
     </body>
 </html>

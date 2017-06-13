@@ -25,18 +25,18 @@ public class ViestiketjuDao implements Dao<Viestiketju, String> {
 
         String id = t.getId();
         String otsikko = t.getOtsikko();
-        ArrayList<Viesti> viestit = new ArrayList<>();
+        String keskustelualue = t.getKeskustelualue();
 
         PreparedStatement statement
-                = connection.prepareStatement("INSERT INTO Keskustelualue VALUES (?, ?, ?)");
+                = connection.prepareStatement("INSERT INTO Viestiketju VALUES (?, ?, ?)");
 
         statement.setString(1, id);
         statement.setString(2, otsikko);
-        statement.setObject(3, viestit);
+        statement.setString(3, keskustelualue);
 
         statement.execute();
 
-        Viestiketju v = new Viestiketju(id, otsikko, viestit);
+        Viestiketju v = new Viestiketju(id, otsikko, keskustelualue);
 
         statement.close();
         connection.close();
@@ -60,8 +60,9 @@ public class ViestiketjuDao implements Dao<Viestiketju, String> {
 
         String id = rs.getString("id");
         String otsikko = rs.getString("otsikko");
+        String keskustelualue = rs.getString("keskustelualue");
 
-        Viestiketju v = new Viestiketju(id, otsikko, new ArrayList<>());
+        Viestiketju v = new Viestiketju(id, otsikko, keskustelualue, new ArrayList<>());
 
         rs.close();
         stmt.close();
@@ -82,8 +83,9 @@ public class ViestiketjuDao implements Dao<Viestiketju, String> {
         while (rs.next()) {
             String id = rs.getString("id");
             String otsikko = rs.getString("otsikko");
+            String keskustelualue = rs.getString("keskustelualue");
 
-            viestiketjut.add(new Viestiketju(id, otsikko, new ArrayList<>()));
+            viestiketjut.add(new Viestiketju(id, otsikko, keskustelualue, new ArrayList<>()));
         }
 
         rs.close();
@@ -120,10 +122,10 @@ public class ViestiketjuDao implements Dao<Viestiketju, String> {
 
     public List<Viestiketju> findThreadsOfArea(String key) throws SQLException {
         Connection connection = database.getConnection();
-        PreparedStatement stmt = connection.prepareStatement("SELECT Viestiketju.id, Viestiketju.otsikko\n"
-                + "FROM Viestiketju, Keskustelualue\n"
-                + "WHERE Keskustelualue.id = ?\n"
-                + "AND Viestiketju.keskustelualue = Keskustelualue.id;");
+        PreparedStatement stmt = connection.prepareStatement("SELECT Viestiketju.id, Viestiketju.otsikko, Viestiketju.keskustelualue\n"
+                + "	FROM Viestiketju, Keskustelualue\n"
+                + "	WHERE Keskustelualue.id = ?\n"
+                + "	AND Viestiketju.keskustelualue = Keskustelualue.id;");
 
         stmt.setObject(1, key);
 
@@ -133,7 +135,8 @@ public class ViestiketjuDao implements Dao<Viestiketju, String> {
         while (rs.next()) {
             String id = rs.getString("id");
             String otsikko = rs.getString("otsikko");
-            viestiketjut.add(new Viestiketju(id, otsikko));
+            String keskustelualue = rs.getString("keskustelualue");
+            viestiketjut.add(new Viestiketju(id, otsikko, keskustelualue));
         }
 
         rs.close();
@@ -144,7 +147,6 @@ public class ViestiketjuDao implements Dao<Viestiketju, String> {
 
     }
 
-    //tätä ei ehkä tarvita, emt
     public String findAreaKey(String key) throws SQLException {
         Connection connection = database.getConnection();
 
@@ -163,7 +165,6 @@ public class ViestiketjuDao implements Dao<Viestiketju, String> {
 
         String keskustelualue = rs.getString("keskustelualue");
 
-
         rs.close();
         stmt.close();
         connection.close();
@@ -171,4 +172,30 @@ public class ViestiketjuDao implements Dao<Viestiketju, String> {
         return keskustelualue;
 
     }
+
+    public String findTitle(String key) throws SQLException {
+        Connection connection = database.getConnection();
+
+        PreparedStatement stmt = connection.prepareStatement("SELECT Viestiketju.otsikko\n"
+                + "FROM Viestiketju\n"
+                + "WHERE Viestiketju.id = ?\n"
+                + "LIMIT 1;");
+        stmt.setObject(1, key);
+
+        ResultSet rs = stmt.executeQuery();
+        boolean hasOne = rs.next();
+        if (!hasOne) {
+            return null;
+        }
+
+        String otsikko = rs.getString("otsikko");
+
+        rs.close();
+        stmt.close();
+        connection.close();
+
+        return otsikko;
+
+    }
+
 }

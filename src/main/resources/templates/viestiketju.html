@@ -7,19 +7,41 @@
     </head>
 
     <body>
-        <h1>Viestiketjun otsikko tähän!</h1>
+        <h1 th:text="${viestitViestiketju.parentName}">Viestiketju</h1>
         <table style="text-align:left;">
 
             <tr>
                 <th>Viestit</th>
             </tr>
 
-            <tr th:each="viesti: ${viestit}">
-
-                <td th:text="${viesti.aika + ' ' + viesti.teksti + ' t.' + viesti.nimi}">0</td>
+            <tr th:each="viesti: ${viestitViestiketju.viestit}">
+                <td th:text="${viesti.aika}">0</td>
+                <td th:text="${viesti.teksti + ' t.' + viesti.nimi}">0</td>
 
             </tr>
 
         </table>
+
+        <h3>Vastaa viestiketjuun</h3>
+        <form id="addviesti" method="POST" th:action="@{~/{areaId}/{id}(areaId=${viestitViestiketju.grandparentId}, id=${viestitViestiketju.parentId})}">
+            <table>
+
+                <tr>
+                    <th>Viesti</th>
+                    <th>Nimi</th>
+                    <th></th>
+                </tr>
+
+                <tr>
+                    <td><input type="text" name="teksti"/></td>
+                    <td><input type="text" name="nimi"/></td>
+                    <td>
+                        <input type="submit" value="Vastaa viestiketjuun!"/>
+                    </td>
+                </tr>
+            </table>
+        </form>
+        <h3><a th:href="@{~/{areaId}(areaId=${viestitViestiketju.grandparentId})}" th:text="'Palaa keskustelualueelle'">Paluulinkki rikki</a></h3> 
+
     </body>
 </html>
